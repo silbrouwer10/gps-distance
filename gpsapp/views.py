@@ -1,4 +1,5 @@
 import os
+import traceback
 import uuid
 
 from django.conf import settings
@@ -24,13 +25,20 @@ def upload_csv_view(request):
             file_path = fs.save(unique_name, csv_file)
             full_path = fs.path(file_path)
 
-            report = build_graph_only_pdf(full_path, settings.MEDIA_ROOT)
-            return FileResponse(
-                open(report["pdf_path"], "rb"),
-                content_type="application/pdf",
-                as_attachment=True,
-                filename=report["pdf_filename"],
-            )
+            try:
+                report = build_graph_only_pdf(full_path, settings.MEDIA_ROOT)
+                return FileResponse(
+                    open(report["pdf_path"], "rb"),
+                    content_type="application/pdf",
+                    as_attachment=True,
+                    filename=report["pdf_filename"],
+                )
+            except Exception as exc:
+                traceback.print_exc()
+                return HttpResponse(
+                    f"Fout tijdens verwerken van CSV: {exc}",
+                    status=400,
+                )
     else:
         form = CSVUploadForm()
 
