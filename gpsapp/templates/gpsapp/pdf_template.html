@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; color: #111; }
+    h1 { color: #B30000; }
+    .table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    .table th { background: #111; color: #fff; padding: 6px; text-align:left; }
+    .table td { border: 1px solid #ddd; padding: 6px; }
+    img { display:block; margin: 10px auto; max-height: 24cm; width: auto; }
+    .section { margin-bottom: 18px; }
+  </style>
+</head>
+<body>
+  <h1>{{ event_name }}</h1>
+
+  <div class="section">
+    <h2>Total Event</h2>
+    <table class="table">
+      <thead>
+        {% if summary_total %}
+        <tr>
+          {% for k in summary_total.0.keys %}<th>{{ k }}</th>{% endfor %}
+        </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for row in summary_total %}
+        <tr>
+          {% for v in row.values %}<td>{{ v }}</td>{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if plot_total_url %}
+    <img src="{{ plot_total_url }}" alt="Total plot">
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>Halves</h2>
+    <table class="table">
+      <thead>
+        {% if summary_halves %}
+        <tr>
+          {% for k in summary_halves.0.keys %}<th>{{ k }}</th>{% endfor %}
+        </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for row in summary_halves %}
+        <tr>
+          {% for v in row.values %}<td>{{ v }}</td>{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if plot_halves_url %}
+    <img src="{{ plot_halves_url }}" alt="Halves plot">
+    {% endif %}
+  </div>
+
+  {% if plot_half_urls %}
+    {% for half, url in plot_half_urls.items %}
+    <div class="section">
+      <h2>{{ half }}</h2>
+      <img src="{{ url }}" alt="Plot {{ half }}">
+    </div>
+    {% endfor %}
+  {% endif %}
+
+</body>
+</html>

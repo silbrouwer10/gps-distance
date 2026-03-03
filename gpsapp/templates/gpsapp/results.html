@@ -1,0 +1,73 @@
+{% extends "gpsapp/base.html" %}
+{% block content %}
+<h2>Resultaat: {{ event_name }}</h2>
+
+<section class="report-section">
+    <h3>Total Event</h3>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                {% if summary_total %}
+                    {% for k in summary_total.0.keys %}
+                    <th>{{ k }}</th>
+                    {% endfor %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary_total %}
+            <tr>
+                {% for v in row.values %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="plot-wrap">
+        <img src="{{ plot_total_url }}" alt="Plot Total Event" class="plot-img">
+    </div>
+</section>
+
+<section class="report-section">
+    <h3>Halves (1e, 2e, 3e)</h3>
+    <table class="styled-table">
+        <thead>
+            <tr>
+            {% if summary_halves %}
+                {% for k in summary_halves.0.keys %}
+                <th>{{ k }}</th>
+                {% endfor %}
+            {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary_halves %}
+            <tr>
+                {% for v in row.values %}
+                <td>{{ v }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="plot-wrap">
+        <img src="{{ plot_halves_url }}" alt="Plot Halves" class="plot-img">
+    </div>
+</section>
+
+{% if plot_half_urls %}
+    {% for half, url in plot_half_urls.items %}
+    <section class="report-section">
+        <h3>{{ half }}</h3>
+        <div class="plot-wrap">
+            <img src="{{ url }}" alt="Plot {{ half }}" class="plot-img">
+        </div>
+    </section>
+    {% endfor %}
+{% endif %}
+
+<div class="actions">
+    <a class="btn" href="{% url 'gpsapp:download_pdf' %}?file={{ pdf_url }}">Download PDF</a>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <title>GPS Rapport Generator</title>
+    <link rel="stylesheet" href="/static/gpsapp/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Clubnaam - GPS Rapport Generator</h1>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="container footer">
+        <small>&copy; {{ now|default:"" }} Club</small>
+    </footer>
+</body>
+</html>
