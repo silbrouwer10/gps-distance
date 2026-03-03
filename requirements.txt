@@ -1,0 +1,9 @@
+Django>=4.2
+pandas
+matplotlib
+numpy
+Pillow
+WeasyPrint>=57.0
+gunicorn>=22.0
+whitenoise>=6.7
+dj-database-url>=2.2

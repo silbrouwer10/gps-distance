@@ -1,0 +1,15 @@
+# Python cache/venv
+venv/
+__pycache__/
+*.pyc
+
+# Local DB + generated files
+db.sqlite3
+media/generated/
+media/uploads/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
