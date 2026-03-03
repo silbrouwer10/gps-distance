@@ -9,8 +9,11 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 allowed_hosts_env = os.environ.get("ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if render_host and render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_host)
 if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
