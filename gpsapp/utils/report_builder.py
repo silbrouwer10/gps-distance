@@ -243,10 +243,13 @@ def images_to_pdf(image_paths, pdf_path):
 
 def build_graph_only_pdf(csv_path, output_base):
     df = pd.read_csv(csv_path)
+    if "exercise" not in df.columns:
+        raise ValueError("CSV mist verplichte kolom: exercise")
 
-    is_match = df["exercise"].str.contains("first half|second half", case=False, na=False).any()
+    exercise_norm = df["exercise"].astype(str).str.strip()
+    is_match = exercise_norm.str.contains("first half|second half", case=False, na=False).any()
 
-    df_total = df[df["exercise"] == "TOTAL EVENT"]
+    df_total = df[exercise_norm.str.upper() == "TOTAL EVENT"]
 
     summary_total = df_total[
         [
@@ -271,6 +274,8 @@ def build_graph_only_pdf(csv_path, output_base):
         }
     )
     summary_total = summary_total.sort_values(by="Speler").reset_index(drop=True)
+    if summary_total.empty:
+        raise ValueError("Geen TOTAL EVENT data gevonden in CSV.")
 
     summary_halves = None
 
@@ -289,6 +294,8 @@ def build_graph_only_pdf(csv_path, output_base):
 
     plot_total_path = os.path.join(output_dir, "plot_total_event.png")
     plot_event(summary_total, f"{event_name} - TOTAL SESSION", plot_total_path, is_match)
+    if not os.path.exists(plot_total_path):
+        raise ValueError("Kon geen grafiek maken voor TOTAL EVENT.")
     rotate_image_90(plot_total_path)
 
     selected_plot_paths = [plot_total_path]
@@ -301,8 +308,9 @@ def build_graph_only_pdf(csv_path, output_base):
             plot_halves_path,
             is_match,
         )
-        rotate_image_90(plot_halves_path)
-        selected_plot_paths.append(plot_halves_path)
+        if os.path.exists(plot_halves_path):
+            rotate_image_90(plot_halves_path)
+            selected_plot_paths.append(plot_halves_path)
 
     safe_event_name = _safe_name(event_name) or "gps_event"
     pdf_filename = f"{safe_event_name}_graphs.pdf"
